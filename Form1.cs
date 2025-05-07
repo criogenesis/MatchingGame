@@ -41,12 +41,23 @@ namespace MatchingGame
             // and added to each label
             foreach(Control control in tableLayoutPanel1.Controls)
             {
+                // converts the control variable to a label named iconLabel.
+                // vvv need better understanding of why this works --------
                 Label iconLabel = control as Label;
                 if(iconLabel != null)
                 {
+                    // Creates a random number
+                    // the .Next function is picking the size of the array for what range of numbers to choose from
+                    // and the size of the array is shown through icons.Count
                     int randomNumber = random.Next(icons.Count);
+
+                    // Self-explanatory but, takes the letter at the now specified indice from the random number
+                    // and sets it equal to the text of the iconLabel, which is the image of the square in this case.
                     iconLabel.Text = icons[randomNumber];
+
                     // iconLabel.ForeColor = iconLabel.BackColor;
+
+                    // removes this option from the list as it has been already used in the grid
                     icons.RemoveAt(randomNumber);
                 }
             }
