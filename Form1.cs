@@ -42,7 +42,10 @@ namespace MatchingGame
             foreach(Control control in tableLayoutPanel1.Controls)
             {
                 // converts the control variable to a label named iconLabel.
-                // vvv need better understanding of why this works --------
+                // I've learned that this is utilizing a safe type casting system, this way it can set iconLabel as null if it
+                // finds a control that can't be cast as a label. Then the following if statement ignores iconLabel.
+                // This is done to prevent an error being thrown as there's a high chance other controls in the winform wouldnt be able
+                // to be type casted as a label.
                 Label iconLabel = control as Label;
                 if(iconLabel != null)
                 {
