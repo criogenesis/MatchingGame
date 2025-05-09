@@ -12,10 +12,11 @@ namespace MatchingGame
 {
     public partial class Form1 : Form
     {
+        Label firstClickedLabel = null;
+        Label secondClickedLabel = null;
+
         // NOTE TO SELF LEFT OFF HERE IN THE TUTORIAL, DELETE WHEN YOU RETURN HERE:
         // https://learn.microsoft.com/en-us/visualstudio/get-started/csharp/tutorial-windows-forms-match-game-icons?view=vs-2022&tabs=csharp
-        // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-        // Assign a random icon to each label
 
 
 
@@ -72,12 +73,18 @@ namespace MatchingGame
         // This is the constructor for the Form1 class.
         public Form1()
         {
+
             InitializeComponent();
 
             AssignIconsToSquare();
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TimerFunction()
         {
 
         }
@@ -101,6 +108,41 @@ namespace MatchingGame
                 }
                 clickedLabel.ForeColor = Color.Black;
             }
+
+            if (firstClickedLabel == null)
+            {
+                firstClickedLabel = clickedLabel;
+                firstClickedLabel.ForeColor = Color.Black;
+            }
+            else
+            {
+                secondClickedLabel = clickedLabel;
+                secondClickedLabel.ForeColor = Color.Black;
+            }
+
+            if (firstClickedLabel != null && secondClickedLabel != null)
+            {
+                if (firstClickedLabel.Text == secondClickedLabel.Text)
+                {
+                    Console.WriteLine("Match found!");
+                    firstClickedLabel = null;
+                    secondClickedLabel = null;
+                }
+                else
+                {
+                    Console.WriteLine("Match NOT found!");
+                    firstClickedLabel.ForeColor = firstClickedLabel.BackColor;
+                    secondClickedLabel.ForeColor = secondClickedLabel.BackColor;
+                    firstClickedLabel = null;
+                    secondClickedLabel = null;
+                }
+            }
+
+            //Console.WriteLine(firstClickedLabel.Text);
+            //if(secondClickedLabel != null)
+            //{
+            //    Console.WriteLine(secondClickedLabel.Text);
+            //}
 
         }
     }
