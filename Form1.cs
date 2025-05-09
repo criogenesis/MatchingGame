@@ -58,17 +58,23 @@ namespace MatchingGame
                     // and sets it equal to the text of the iconLabel, which is the image of the square in this case.
                     iconLabel.Text = icons[randomNumber];
 
-                    // iconLabel.ForeColor = iconLabel.BackColor;
+
+                    iconLabel.ForeColor = iconLabel.BackColor;
 
                     // removes this option from the list as it has been already used in the grid
+                    // **Note the list is manually created and consists of a duplicate of every icon used**
                     icons.RemoveAt(randomNumber);
                 }
             }
         }
 
+
+        // This is the constructor for the Form1 class.
         public Form1()
         {
             InitializeComponent();
+
+            AssignIconsToSquare();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -76,8 +82,25 @@ namespace MatchingGame
 
         }
 
+        /// <summary>
+        /// Every label's Click event is handled by this event handler
+        /// </summary>
+        /// <param name="sender">The label that was clicked</param>
+        /// <param name="e"></param>
         private void label1_Click(object sender, EventArgs e)
         {
+
+            Label clickedLabel = sender as Label;
+
+            if(clickedLabel != null)
+            {
+                
+                if(clickedLabel.ForeColor == Color.Black)
+                {
+                    return;
+                }
+                clickedLabel.ForeColor = Color.Black;
+            }
 
         }
     }
