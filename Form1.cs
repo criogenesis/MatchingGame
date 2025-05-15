@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,6 +15,7 @@ namespace MatchingGame
     {
         Label firstClickedLabel = null;
         Label secondClickedLabel = null;
+        bool TimerFlag = false;
 
         // NOTE TO SELF LEFT OFF HERE IN THE TUTORIAL, DELETE WHEN YOU RETURN HERE:
         // https://learn.microsoft.com/en-us/visualstudio/get-started/csharp/tutorial-windows-forms-match-game-icons?view=vs-2022&tabs=csharp
@@ -84,9 +86,36 @@ namespace MatchingGame
 
         }
 
+        /// <summary>
+        /// Starts a 2 second timer that triggers the OnTimedEvent function when the time is done.
+        /// </summary>
         private void TimerFunction()
         {
+            TimerFlag = true;
+            Console.WriteLine("TimerFunction Start");
+            System.Timers.Timer timer = new System.Timers.Timer(2000);
+            timer.Elapsed += OnTimedEvent;
+            timer.AutoReset = false; // Only fire once
+            timer.Enabled = true;
+        }
 
+        /// <summary>
+        /// Function responsible for reseting the matched options back to the original blue color since neither will match
+        /// When this function is called after the timer function is called.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            Console.WriteLine("Match NOT found!");
+            Console.WriteLine(TimerFlag);
+
+            // Hides both labels then sets them back to null for the next potential pairs.
+            firstClickedLabel.ForeColor = firstClickedLabel.BackColor;
+            secondClickedLabel.ForeColor = secondClickedLabel.BackColor;
+            firstClickedLabel = null;
+            secondClickedLabel = null;
+            TimerFlag = false;
         }
 
         /// <summary>
@@ -99,16 +128,17 @@ namespace MatchingGame
 
             Label clickedLabel = sender as Label;
 
-            if(clickedLabel != null)
+            // We want to return out of the function if a timer is currently running to prevent null pointer exceptions if
+            // the player clicks another block while the timer is going.
+            if(TimerFlag == true)
             {
-                
-                if(clickedLabel.ForeColor == Color.Black)
-                {
-                    return;
-                }
-                clickedLabel.ForeColor = Color.Black;
+                Console.WriteLine("WE RETURNIN FRFR");
+                return;
             }
 
+            // Checks if the first clicked label has been assigned to the initial clickedLabel variable
+            // if it hasn't, assign it and show the icon.
+            // otherwise, assign the second label.
             if (firstClickedLabel == null)
             {
                 firstClickedLabel = clickedLabel;
@@ -120,29 +150,24 @@ namespace MatchingGame
                 secondClickedLabel.ForeColor = Color.Black;
             }
 
+            // Since both have been chosen we decide to see if there's a match
             if (firstClickedLabel != null && secondClickedLabel != null)
             {
+                // If a match has been found, we keep those specific icons shown until the end of the game
                 if (firstClickedLabel.Text == secondClickedLabel.Text)
                 {
                     Console.WriteLine("Match found!");
                     firstClickedLabel = null;
                     secondClickedLabel = null;
                 }
+
+                // If it's not a match and we begin the 2 second timer to show the player which ones were wrong
+                // so that they can remember them.
                 else
                 {
-                    Console.WriteLine("Match NOT found!");
-                    firstClickedLabel.ForeColor = firstClickedLabel.BackColor;
-                    secondClickedLabel.ForeColor = secondClickedLabel.BackColor;
-                    firstClickedLabel = null;
-                    secondClickedLabel = null;
+                    TimerFunction();
                 }
             }
-
-            //Console.WriteLine(firstClickedLabel.Text);
-            //if(secondClickedLabel != null)
-            //{
-            //    Console.WriteLine(secondClickedLabel.Text);
-            //}
 
         }
     }
