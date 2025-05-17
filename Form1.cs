@@ -72,6 +72,27 @@ namespace MatchingGame
             }
         }
 
+        private void CheckForWinner()
+        {
+            // This loop and code all the way up to line 82 is the same when assigned icons to the grid
+            // the only exception is line 85, where if we see an empty grid, we know the player has not won the game yet
+            // so we return out of the function
+            foreach (Control control in tableLayoutPanel1.Controls)
+            {
+                
+                Label iconLabel = control as Label;
+                if (iconLabel != null)
+                {
+                    if(iconLabel.ForeColor == iconLabel.BackColor)
+                    {
+                        return;
+                    }
+                }
+            }
+            MessageBox.Show("YOU WON THE GAAAAAAAAAAME!!!!");
+            Close();
+        }
+
 
         // This is the constructor for the Form1 class.
         public Form1()
@@ -94,7 +115,7 @@ namespace MatchingGame
         {
             TimerFlag = true;
             Console.WriteLine("TimerFunction Start");
-            System.Timers.Timer timer = new System.Timers.Timer(2000);
+            System.Timers.Timer timer = new System.Timers.Timer(750);
             timer.Elapsed += OnTimedEvent;
             timer.AutoReset = false; // Only fire once
             timer.Enabled = true;
@@ -133,9 +154,9 @@ namespace MatchingGame
             // the player clicks another block while the timer is going.
             if(TimerFlag == true)
             {
-                Console.WriteLine("WE RETURNIN FRFR");
                 return;
             }
+
 
             // Checks if the first clicked label has been assigned to the initial clickedLabel variable
             // if it hasn't, assign it and show the icon.
@@ -149,6 +170,9 @@ namespace MatchingGame
             {
                 secondClickedLabel = clickedLabel;
                 secondClickedLabel.ForeColor = Color.Black;
+
+                // Check if the game is won.
+                CheckForWinner();
             }
 
             // Since both have been chosen we decide to see if there's a match
